@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AddSubscriptionPage extends StatefulWidget {
-  const AddSubscriptionPage({
+  AddSubscriptionPage({
     Key? key,
     this.subscriptionName,
     this.subscriptionPrice,
