@@ -17,7 +17,7 @@ class SubscriptionElement extends StatelessWidget {
   final void Function(int) onDelete;
 
   void _handleSelection(String value) {
-    print('Selected $value');
+    //print('Selected $value');
     if (value == 'Delete') {
       _deleteSubscription();
     } else if (value == 'Edit') {
@@ -26,7 +26,7 @@ class SubscriptionElement extends StatelessWidget {
   }
 
   void _deleteSubscription() {
-    print('delete subscription $subscriptionId');
+    //print('delete subscription $subscriptionId');
     onDelete(subscriptionId);
   }
 

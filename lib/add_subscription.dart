@@ -24,9 +24,10 @@ class _AddSubscriptionPageState extends State<AddSubscriptionPage> {
       TextEditingController();
   @override
   void initState() {
+    /*
     print(widget.subscriptionName);
     print(widget.subscriptionPrice);
-    print(widget.subscriptionId);
+    print(widget.subscriptionId);*/
     if (widget.subscriptionName != null) {
       _subscriptionNameController.text = widget.subscriptionName!;
     }

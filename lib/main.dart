@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   runApp(
     MaterialApp(
-      title: 'Abo Tracker',
+      title: 'Subscription Tracker',
       // Start the app with the "/" named route. In this case, the app starts
       // on the FirstScreen widget.
       initialRoute: '/',
@@ -19,7 +19,7 @@ void main() {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/': (context) => const MyHomePage(
-              title: 'Abo Tracker',
+              title: 'Subscription Tracker',
             ),
         // When navigating to the "/addabo" route, build the addaboScreen widget.
         '/addabo': (context) => AddSubscriptionPage(),
@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _deleteSubscription(int id) async {
-    print('delete subscription $id');
+    //print('delete subscription $id');
     final SharedPreferences prefs = await _prefs;
     final String? subscriptions = prefs.getString('subscriptions');
     final List<dynamic> subscriptionsJson =
@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _loadSubscriptions() async {
-    print('loading subscriptions');
+    //print('loading subscriptions');
     _subscriptions.clear();
     final SharedPreferences prefs = await _prefs;
     final String? subscriptions = prefs.getString('subscriptions');
@@ -100,6 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
+  @override
   void initState() {
     super.initState();
     _loadSubscriptions();
@@ -110,6 +111,39 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(48.0),
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.0),
+                  topRight: Radius.circular(16.0),
+                ),
+                color: Colors.white,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    const Text(
+                      'Total:',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '\$${_subscriptions.fold(0.0, (double sum, SubscriptionElement element) => sum + element.subscriptionPrice).toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )),
       ),
       body: ListView(
         children: <Widget>[
