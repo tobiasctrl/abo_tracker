@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddSubscriptionPage extends StatefulWidget {
   AddSubscriptionPage({
@@ -21,13 +24,36 @@ class _AddSubscriptionPageState extends State<AddSubscriptionPage> {
       TextEditingController();
   @override
   void initState() {
-    super.initState();
+    print(widget.subscriptionName);
+    print(widget.subscriptionPrice);
+    print(widget.subscriptionId);
     if (widget.subscriptionName != null) {
       _subscriptionNameController.text = widget.subscriptionName!;
     }
     if (widget.subscriptionPrice != null) {
       _subscriptionPriceController.text = widget.subscriptionPrice.toString();
     }
+    super.initState();
+  }
+
+  Future<void> _saveSubscription() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? subscriptions = prefs.getString('subscriptions');
+    final List<dynamic> subscriptionsJson =
+        subscriptions != null ? json.decode(subscriptions) : <dynamic>[];
+    final Map<String, dynamic> subscriptionJson = <String, dynamic>{
+      'name': _subscriptionNameController.text,
+      'price': double.parse(_subscriptionPriceController.text),
+      'id': widget.subscriptionId ?? subscriptionsJson.length,
+    };
+    //remove the old subscription if it exists
+    if (widget.subscriptionId != null) {
+      subscriptionsJson.removeWhere((dynamic subscription) =>
+          subscription['id'] == widget.subscriptionId);
+    }
+    subscriptionsJson.add(subscriptionJson);
+    prefs.setString('subscriptions', json.encode(subscriptionsJson));
+    Navigator.pop(context);
   }
 
   @override
@@ -39,25 +65,28 @@ class _AddSubscriptionPageState extends State<AddSubscriptionPage> {
       // TextField for subscription name and for subscription price
       body: Container(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: const <Widget>[
-            TextField(
-              decoration: InputDecoration(
+        child: Flex(
+          direction: Axis.vertical,
+          children: <Widget>[
+            Flexible(
+                child: TextFormField(
+              controller: _subscriptionNameController,
+              decoration: const InputDecoration(
                 labelText: 'Subscription Name',
               ),
-            ),
-            TextField(
-              decoration: InputDecoration(
+            )),
+            Flexible(
+                child: TextFormField(
+              controller: _subscriptionPriceController,
+              decoration: const InputDecoration(
                 labelText: 'Subscription Price',
               ),
-            ),
+            )),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.pop(context);
-        },
+        onPressed: _saveSubscription,
         tooltip: 'Save',
         label: const Text('Save'),
         icon: const Icon(Icons.save),
