@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:abo_tracker/add_subscription.dart';
 import 'package:abo_tracker/subscription_element.dart';
@@ -44,7 +45,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _navigateToAddSubscription(
       String? name, double? price, int? id) async {
     if (_subscriptions.isNotEmpty && id == null) {
-      id = _subscriptions[_subscriptions.length - 1].subscriptionId + 1;
+      // new subscription, so use the max id + 1
+      id = _subscriptions
+              .map((SubscriptionElement element) => element.subscriptionId)
+              .reduce((int a, int b) => max(a, b)) +
+          1;
     } else {
       id ??= 0;
     }

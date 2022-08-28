@@ -37,6 +37,10 @@ class _AddSubscriptionPageState extends State<AddSubscriptionPage> {
   }
 
   Future<void> _saveSubscription() async {
+    if (_subscriptionNameController.text.isEmpty ||
+        _subscriptionPriceController.text.isEmpty) {
+      return;
+    }
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? subscriptions = prefs.getString('subscriptions');
     final List<dynamic> subscriptionsJson =
