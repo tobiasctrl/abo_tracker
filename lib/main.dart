@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   runApp(
     MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Subscription Tracker',
       // Start the app with the "/" named route. In this case, the app starts
       // on the FirstScreen widget.
