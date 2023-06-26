@@ -81,13 +81,14 @@ class _AddSubscriptionPageState extends State<AddSubscriptionPage> {
               ),
             )),
             Flexible(
-                child: TextFormField(
-              controller: _subscriptionPriceController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Subscription Price',
+              child: TextFormField(
+                controller: _subscriptionPriceController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Subscription Price',
+                ),
               ),
-            )),
+            ),
           ],
         ),
       ),

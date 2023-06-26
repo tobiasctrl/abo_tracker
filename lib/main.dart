@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   runApp(
     MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       title: 'Subscription Tracker',
       // Start the app with the "/" named route. In this case, the app starts
       // on the FirstScreen widget.
@@ -43,14 +43,10 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<SubscriptionElement> _subscriptions = [];
   final JsonCodec json = const JsonCodec();
 
-  Future<void> _navigateToAddSubscription(
-      String? name, double? price, int? id) async {
+  Future<void> _navigateToAddSubscription(String? name, double? price, int? id) async {
     if (_subscriptions.isNotEmpty && id == null) {
       // new subscription, so use the max id + 1
-      id = _subscriptions
-              .map((SubscriptionElement element) => element.subscriptionId)
-              .reduce((int a, int b) => max(a, b)) +
-          1;
+      id = _subscriptions.map((SubscriptionElement element) => element.subscriptionId).reduce((int a, int b) => max(a, b)) + 1;
     } else {
       id ??= 0;
     }
@@ -70,10 +66,8 @@ class _MyHomePageState extends State<MyHomePage> {
     //print('delete subscription $id');
     final SharedPreferences prefs = await _prefs;
     final String? subscriptions = prefs.getString('subscriptions');
-    final List<dynamic> subscriptionsJson =
-        subscriptions != null ? json.decode(subscriptions) : <dynamic>[];
-    subscriptionsJson
-        .removeWhere((dynamic subscription) => subscription['id'] == id);
+    final List<dynamic> subscriptionsJson = subscriptions != null ? json.decode(subscriptions) : <dynamic>[];
+    subscriptionsJson.removeWhere((dynamic subscription) => subscription['id'] == id);
     prefs.setString('subscriptions', json.encode(subscriptionsJson));
     _loadSubscriptions();
   }
@@ -89,13 +83,15 @@ class _MyHomePageState extends State<MyHomePage> {
         final String subscriptionName = subscriptionJson['name'];
         final double subscriptionPrice = subscriptionJson['price'];
         final int subscriptionId = subscriptionJson['id'];
-        _subscriptions.add(SubscriptionElement(
-          subscriptionName: subscriptionName,
-          subscriptionPrice: subscriptionPrice,
-          subscriptionId: subscriptionId,
-          onEdit: _navigateToAddSubscription,
-          onDelete: _deleteSubscription,
-        ));
+        _subscriptions.add(
+          SubscriptionElement(
+            subscriptionName: subscriptionName,
+            subscriptionPrice: subscriptionPrice,
+            subscriptionId: subscriptionId,
+            onEdit: _navigateToAddSubscription,
+            onDelete: _deleteSubscription,
+          ),
+        );
       }
     }
     setState(() {});
@@ -113,43 +109,43 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
         bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(48.0),
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16.0),
-                  topRight: Radius.circular(16.0),
-                ),
-                color: Colors.white,
+          preferredSize: const Size.fromHeight(48.0),
+          child: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16.0),
+                topRight: Radius.circular(16.0),
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    const Text(
-                      'Total:',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+              color: Colors.white,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  const Text(
+                    'Total:',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Text(
-                      '\$${_subscriptions.fold(0.0, (double sum, SubscriptionElement element) => sum + element.subscriptionPrice).toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  ),
+                  Text(
+                    '\$${_subscriptions.fold(0.0, (double sum, SubscriptionElement element) => sum + element.subscriptionPrice).toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            )),
+            ),
+          ),
+        ),
       ),
       body: ListView(
         children: <Widget>[
-          for (final SubscriptionElement subscription in _subscriptions)
-            subscription,
+          for (final SubscriptionElement subscription in _subscriptions) subscription,
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
